@@ -1,0 +1,160 @@
+.top-banner {
+  position: fixed;
+  top: 0;
+  padding: 10px 15px;
+  width: 100%;
+  background: #e85d5d;
+  z-index: 9;
+}
+.avatar {
+  display: inline-block;
+  vertical-align: middle;
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  border: 2px solid #fff;
+}
+.user-name {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 16px;
+  padding-left: 10px;
+  color: #fff;
+}
+.expand {
+  position: absolute;
+  top: 18px;
+  right: 15px;
+}
+.fa-bars {
+  color: #fff;
+}
+.menu-item {
+  margin-top: 20px;
+  color: #fff;
+}
+.menu-name{
+  padding: 0 5px 2px;
+  font-size: 14px;
+}
+.menu-child {
+  background: #fff;
+  color: #333;
+  font-size: 14px;
+}
+.menu-child-item {
+  display: block;
+  padding: 10px 15px;
+  color: #333;
+  font-size: 14px;
+}
+.link-icon {
+  float: right;
+  color: #adaaaa;
+}
+.list-view {
+  padding-top: 70px;
+  height: 100%;
+  overflow-y: auto;
+}
+.list-grid {
+  display: grid;
+  padding: 15px 10px;
+  color: #333;
+  grid-template-columns: auto 20%;
+}
+.menu-child .vux-calendar:before {
+  border-top: none;
+}
+.sc {
+  margin-bottom: 10px;
+}
+.stock-code {
+  display: inline-block;
+  color: #333;
+  padding: 0 2px;
+  border: 1px solid #333;
+  margin: 5px;
+  font-size: 14px;
+  width: 70px;
+  text-align: center;
+}
+.stock-code.active {
+  border-color: #e85d5d;
+  color: #e85d5d;
+}
+.filter-menu {
+  padding: 15px;
+  text-align: center;
+  font-size: 18px;
+}
+.filter-menu .weui-cell {
+  padding: 0;
+  display: block;
+}
+.filter-menu .vux-calendar:before {
+  border-top: none;
+}
+.filter-menu .vux-cell-value {
+  display: none;
+}
+.msg-list-view {
+  padding-top: 50px;
+  height: 100%;
+  overflow-y: auto;
+}
+.msg-item {
+  position: relative;
+  padding: 5px 30px 5px 15px;
+}
+.msg-item.unimportance {
+  background: #fffef8;
+}
+.msg-item.importance {
+  background: #e8e7df;
+}
+.msg-text {
+  color: #333;
+  font-size: 16px;
+}
+.msg-date {
+  color: #cdcdcd;
+  font-size: 14px;
+}
+.msg-type {
+  display: inline-block;
+  margin-left: 5px;
+  padding: 0 5px;
+  color: #333;
+  font-size: 14px;
+  border: 1px solid #333;
+  border-radius: 5px;
+}
+.msg-type.primary {
+  color: #1aad19;
+  border-color: #1aad19;
+}
+.msg-type.warn {
+  color: #e64340;
+  border-color: #e64340;
+}
+.new-point {
+  position: absolute;
+  right: 10px;
+  top: 15px;
+  width: 8px;
+  height: 8px;
+  background: #e85d5d;
+  border-radius: 100%;
+}
+.group-item-label {
+  padding: 10px 0;
+  display: grid;
+  grid-template-columns: 80% 20%;
+}
+.gil-name {
+  padding-left: 15px;
+  font-size: 18px;
+}
+
+

@@ -1,0 +1,61 @@
+.article-panel {
+  padding-top: 50px;
+  height: 100%;
+  overflow-y: auto;
+}
+.article-title {
+  width: 90%;
+  margin: 0 auto;
+  font-size: 16px;
+  padding: 20px 15px 10px 15px;
+  text-align: center;
+}
+.article-time {
+  font-size: 14px;
+  color: #ccc;
+  text-align: center;
+}
+.article-content {
+  padding: 15px;
+  font-size: 14px;
+}
+.default-content {
+  width: 80px;
+  height: 80px;
+  text-align: center;
+  margin: 0 auto;
+  padding-top: 150px;
+}
+.attachment-text a{
+  color: #333;
+  padding: 15px;
+  font-size: 14px;
+}
+.sina_content .ilt_name a,
+.sina_content .ilt_name{
+  font-size: 16px;
+  color: #a1b2c5;
+  font-weight: bold;
+}
+.sina_content  .ilt_tit{
+  color: #333;
+  font-size: 22px;
+}
+
+.sina_content table {
+  width: 100%;
+  border: 1px solid #dce5f4;
+}
+.sina_content table thead {
+  background-color: rgb(220, 229, 244);
+  color: rgb(5, 35, 121);
+  font-size: 16px;
+  line-height: 30px;
+  text-align: center;
+}
+.sina_content table td,
+.sina_content table th{
+  border: 1px solid #dce5f4;
+  background: #F7F7F7;
+}
+
