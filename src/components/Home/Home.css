@@ -150,7 +150,16 @@
 .group-item-label {
   padding: 10px 0;
   display: grid;
+  background: #fff;
   grid-template-columns: 80% 20%;
+}
+.group-item-label-inner {
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+}
+.group-ml-panel {
+  padding-top: 48px;
 }
 .gil-name {
   padding-left: 15px;

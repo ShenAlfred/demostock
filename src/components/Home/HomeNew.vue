@@ -1,7 +1,7 @@
 <template>
   <div class="full-page">
     <!--  Drawer -->
-    <drawer :show.sync="drawerVisibility" :drawer-style="{'background-color':'#e85d5d', width: '300px'}">
+    <drawer :show.sync="drawerVisibility" :drawer-style="{'background-color':'#e85d5d', width: '300px', 'z-index': '666'}">
       <!-- top-banner -->
       <div class="top-banner">
         <img :src="user.avatar" alt="" class="avatar">
@@ -59,54 +59,65 @@
       </div>
       <!-- list-view -->
       <div class="list-view" id="Home-List-View" ref="HomeListView">
-        <div class="group-item vux-1px-b" ref="groupItem" v-bind:data-index="index" v-bind:data-corpId="group.corpId" v-for="(group, index) in groupList">
-          <div class="group-item-label vux-1px-b"  v-scrollfixed="{_group: group, _other: groupList, _index: index}">
+        <div class="group-item vux-1px-b" v-bind:data-index="index" v-bind:data-corpId="group.corpId" v-for="(group, index) in groupList">
+          <div class="group-item-label vux-1px-b" v-on:click="_showDataLayer({'paras[corpId]': group.corpId}, index, group.corpId)">
             <div class="gil-name">{{ group.name }}</div>
             <div class="ac">
               <!--<badge v-if="group.count != 0" :text="group.count"  @click.native="unReadEvent($event, group.corpId)"></badge>-->
-              <badge v-if="group.count != 0" :text="group.count"  @click.native="unReadEvent($event, group.corpId)"></badge>
-            </div>
-          </div>
-          <div class="group-ml-panel" style="display: none"> <!-- v-bind:style="{display:group.isToggle}" -->
-            <div class="msg-item vux-1px-b" v-bind:class="{importance: msg.type == 1 || msg.type == 2 || msg.type == 3 || msg.type == 4, unimportance: msg.type == 5 || msg.type == 6 || msg.type == 7}" v-for="(msg, index) in group.data.page.list" v-on:click="toDetail(msg.id)">
-              <div>
-                <div class="msg-text ellipsis">
-                  [{{msg.originSource}}]
-                  {{ msg.title }}
-                </div>
-                <div class="msg-date">
-                  <span>{{ msg.date }}</span>
-                  <span class="msg-type">
-                    {{ msg.dateType }}
-                  </span>
-                </div>
-              </div>
-              <div class="new-point" v-show="!msg.read"></div>
-            </div>
-            <divider style="padding:40px 0;" v-show="!group.data.page.list.length">暂无数据</divider>
-            <div class="more" v-show="group.data.page.list.length">
-              <div v-on:click="more(index, group.corpId)" v-show="!group.data.page.lastPage">点击查看更多</div>
-              <div v-show="group.data.page.lastPage">没有更多数据</div>
+              <badge v-if="group.count != 0" :text="group.count"></badge>
             </div>
           </div>
         </div>
       </div>
       <!-- list-view -->
     </drawer>
-    <popup v-model="isShowCalendarSingle">
-      <calendar  :value="calendar1.value" @select="selectDate"></calendar>
+    <popup height="90%" v-model="showDataLayer" :showMask="false" :popup-style="{'z-index': '522'}">
+      <div class="group-item-label group-item-label-inner vux-1px-b" v-on:click="_hideDataLayer">
+        <div class="gil-name">{{singleMsg.name}}</div>
+        <div class="ac">
+          <!--<badge v-if="group.count != 0" :text="group.count"  @click.native="unReadEvent($event, group.corpId)"></badge>-->
+          <badge v-if="singleMsg.count != 0" :text="singleMsg.count"></badge>
+        </div>
+      </div>
+      <div class="group-ml-panel">
+        <div class="msg-item vux-1px-b" v-bind:class="{importance: msg.type == 1 || msg.type == 2 || msg.type == 3 || msg.type == 4, unimportance: msg.type == 5 || msg.type == 6 || msg.type == 7}" v-for="(msg, index) in singleMsg.data.page.list" v-on:click="toDetail(msg.id)">
+          <div>
+            <div class="msg-text ellipsis">
+              [{{msg.originSource}}]
+              {{ msg.title }}
+            </div>
+            <div class="msg-date">
+              <span>{{ msg.date }}</span>
+              <span class="msg-type">
+                  {{ msg.dateType }}
+                </span>
+            </div>
+          </div>
+          <div class="new-point" v-show="!msg.read"></div>
+        </div>
+        <divider style="padding:40px 0;" v-show="!singleMsg.data.page.list.length">暂无数据</divider>
+        <div class="more" v-show="singleMsg.data.page.list.length">
+          <div v-on:click="more(currentShowPanel, singleMsg.corpId)" v-show="!singleMsg.data.page.lastPage">点击查看更多</div>
+          <div v-show="singleMsg.data.page.lastPage">没有更多数据</div>
+        </div>
+      </div>
     </popup>
-    <popup v-model="isShowCalendar">
+    <popup v-model="isShowCalendarSingle" height="100%" :showMask="false" :popup-style="{'z-index': '555'}">
+      <calendar  :value="calendar1.value" @select="selectDate"></calendar>
+      <x-button @click.native="isShowCalendarSingle=!isShowCalendarSingle">取消</x-button>
+    </popup>
+    <popup v-model="isShowCalendar" height="100%" :showMask="false" :popup-style="{'z-index': '555'}">
       <calendar :range="calendar2.range" :lunar="calendar2.lunar" :value="calendar2.value" :begin="calendar2.begin" :end="calendar2.end" @select="selectDateRange"></calendar>
+      <x-button @click.native="isShowCalendarSingle=!isShowCalendarSingle">取消</x-button>
     </popup>
     <toast v-model="getDataError" type="text">获取数据失败!</toast>
   </div>
 </template>
 <style>
- @import './Home.css';
+  @import './Home.css';
 </style>
 <script>
-  import { Drawer, Badge, Divider, dateFormat, Popup, Toast } from 'vux';
+  import { Drawer, Badge, Divider, dateFormat, Popup, Toast, XButton } from 'vux';
   import Store from '@/store/index'
   import util from '@/util'
   import config from '@/config';
@@ -141,7 +152,14 @@
         stocks: [],                 //股票代码
         corpId: '',                 //股票代码唯一的id
         getDataError: false,        //获取数据失败提示
-        group_item_label: []
+        showDataLayer: false,
+        singleMsg: {
+          data: {
+            page: {
+              list: []
+            }
+          }
+        }
       }
     },
     methods: {
@@ -195,7 +213,7 @@
           self.user.name = res.data.data.name;
         });
       },
-      filterMessageList: function(params, index) {
+      filterMessageListNew: function(params, index) {
         var self = this;
         this.$ajax.get(config.baseUrl + '/crawler/api/messages', {
           params: params
@@ -224,14 +242,15 @@
                 }
               };
             }
+            self.singleMsg = self.groupList[index];
             self.$store.state.GroupList[index].data.page.list = req.data.data.page.list;
           }else {
             self.getDataError = true;
           }
         });
       },
-      //点击加载更多触发的事件
-      requestMessageList: function(params, index) {
+      //点击加载更多触发的事件(new)
+      requestMessageListNew: function(params, index) {
         var self = this;
         this.$ajax.get(config.baseUrl + '/crawler/api/messages', {
           params: params
@@ -260,14 +279,15 @@
                 }
               };
             }
+            self.singleMsg = self.groupList[index];
             self.$store.state.GroupList[index].data.page.list = self.groupList[index].data.page.list;
           }else {
             self.getDataError = true;
           }
         });
       },
-      //获取消息列表
-      getMessageList: function(params,index) {
+      //获取消息列表(new)
+      getMessageListNew: function(params,index) {
         var self = this;
         if(this.$store.state.GroupList[index].data.page.list.length) {
           this.$ajax.get(config.baseUrl + '/crawler/api/messages', {
@@ -277,6 +297,7 @@
               self.$store.state.GroupList[index].count = req.data.data.count;
               self.groupList[index].data.page.list = self.$store.state.GroupList[index].data.page.list;
               self.groupList[index].count = self.$store.state.GroupList[index].count;
+              self.singleMsg = self.groupList[index];
             }
           });
         }else {
@@ -291,6 +312,7 @@
                   msg.date = dateFormat(new Date(msg.dateTimestamp), 'YYYY-MM-DD');
                   self.what_type_source(msg, msg.type, msg.source);
                 });
+                self.singleMsg = self.groupList[index];
               }else {
                 list.data = {
                   page: {
@@ -416,7 +438,7 @@
       },
       //点击加载更多
       more: function(index, corpId) {
-        this.requestMessageList({
+        this.requestMessageListNew({
           "paras[corpId]": corpId,
           pageNumber: ++this.groupList[index].pageNumber
         }, index);
@@ -426,7 +448,7 @@
         this.startRange = start[0]+"-"+this.date[start[1]]+"-"+start[2];
         this.endRange = end[0]+"-"+this.date[end[1]]+"-"+end[2];
         this.isShowCalendar = false;
-        this.filterMessageList({
+        this.filterMessageListNew({
           "paras[startTime]": this.startRange,
           "paras[endTime]": this.endRange,
           "paras[corpId]": this.corpId,
@@ -437,7 +459,7 @@
       selectDate: function(value) {
         this.startRange = value[0]+"-"+value[1]+"-"+value[2];
         this.isShowCalendarSingle = false;
-        this.filterMessageList({
+        this.filterMessageListNew({
           "paras[startTime]": this.startRange,
           "paras[corpId]": this.corpId,
           pageNumber: 1
@@ -456,67 +478,57 @@
         this.drawerVisibility = false;
         this.isShowCalendarSingle = true;
       },
-      scrollFixed: function() {}
+      _showDataLayer: function(params, index, corpId) {
+        this.$store.state.currentShowPanel = this.currentShowPanel = index;
+        this.getMessageListNew(params, index);
+        this.showDataLayer = true;
+        this.$store.state.expand = true;
+        this.$store.state.corpId = this.corpId = corpId;
+        this.$nextTick(()=> {
+          var obj= {}, stockCode = document.querySelectorAll('.stock-code');
+          stockCode.forEach(function(el, index) {
+            if(corpId == el.dataset.corpid) {
+              obj = {
+                currentBlockIndex: index,
+                _index: parseInt(el.dataset.index)
+              }
+              return obj;
+            }
+          });
+          this.stocks.forEach(function(every) {
+            every.isActive = false;
+          });
+          this.stocks[obj.currentBlockIndex].isActive = true;
+        });
+      },
+      _hideDataLayer: function() {
+        this.showDataLayer = false;
+      }
     },
     mounted: function() {
-      var self = this;
       this.getUserInfo();
       this.getGroupList();
       this.getStocksList();
-      this.$refs.HomeListView.addEventListener('scroll', function() {
-        self.scrollFixed();
-        self.$store.state.scrollTop = this.scrollTop;
-      });
-      this.$nextTick(()=> {
-        this.$refs.HomeListView.scrollTop = self.$store.state.scrollTop;
-//        var groupPanels = document.querySelectorAll(".group-ml-panel");
-//        groupPanels.forEach(function(each) {
-//          each.style.display = 'none';
-//        });
-//        groupPanels[this.$store.state.currentShowPanel].style.display = 'block';
-      });
+      this.showDataLayer = this.$store.state.expand;
+      this.currentShowPanel = this.$store.state.currentShowPanel;
+      this.corpId = this.$store.state.corpId;
+      if(this.showDataLayer) {
+        this.singleMsg =  this.$store.state.GroupList[this.$store.state.currentShowPanel]
+      }
     },
     directives: {
-      scrollfixed: {
-        inserted: function(el, binding, vnode) {
-          el.addEventListener('click', function(event) {
-            event.stopPropagation();
-            vnode.context.corpId = binding.value._group.corpId;
-            vnode.context.currentShowPanel =  binding.value._index;
-            vnode.context.$store.state.currentShowPanel = binding.value._index;
-            if(document.querySelector("#Home-List-View").scrollTop > 0 ){
-              document.querySelector("#Home-List-View").scrollTop = binding.value._index * 48;
-            }
-            if(el.nextElementSibling.style.display == 'block') {
-              el.nextElementSibling.style.display = 'none';
-            }else {
-              var groupItem = document.querySelectorAll(".group-item-label");
-//              groupItem.forEach(function(each) {
-//                each.nextElementSibling.style.display = 'none';
-//              });
-              el.nextElementSibling.style.display = 'block';
-              vnode.context.getMessageList({
-                "paras[corpId]": binding.value._group.corpId
-              }, binding.value._index);
-            }
-          })
-        }
-      },
       currentStock: {
         inserted: function(el, binding, vnode) {
           var obj= {};
           el.addEventListener('click', function() {
-            var groupItem = document.querySelectorAll('.group-item');
-            var corpId = el.dataset.corpid;
+            var groupItem = document.querySelectorAll('.group-item'), corpId = el.dataset.corpid;
             vnode.context.corpId = corpId;
             groupItem.forEach(function(el, index) {
-              el.querySelector('.group-ml-panel').style.display = 'none';
               if(corpId == el.dataset.corpid) {
                 obj = {
                   currentBlockIndex: index,
                   _index: parseInt(el.dataset.index)
                 }
-                el.querySelector('.group-ml-panel').style.display = 'block';
                 return obj;
               }
             });
@@ -524,11 +536,11 @@
               every.isActive = false;
             });
             vnode.context.stocks[binding.value.currentStockCodeIndex].isActive = true;
-            document.querySelector("#Home-List-View").scrollTop = obj.currentBlockIndex * 48;
             vnode.context.drawerVisibility = false;
             vnode.context.currentShowPanel = obj._index;
+            vnode.context.showDataLayer = vnode.context.$store.state.expand = true;
             vnode.context.$store.state.currentShowPanel = obj._index;
-            vnode.context.getMessageList({
+            vnode.context.getMessageListNew({
               "paras[corpId]": corpId
             }, obj._index);
           });
@@ -541,7 +553,8 @@
       Divider,
       Calendar,
       Popup,
-      Toast
+      Toast,
+      XButton
     }
   }
 </script>

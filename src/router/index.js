@@ -14,7 +14,7 @@ const router = new Router({
       meta: {
         recodeScroll: true
       },
-      component: resolve => require(['@/components/Home/Home'], resolve),
+      component: resolve => require(['@/components/Home/HomeNew'], resolve),
       beforeEnter: function(to, from , next) {
         if(typeof(applyId) == "undefined" || applyId == ""){
           next();
@@ -55,7 +55,6 @@ router.beforeEach(function(to, from, next) {
     //console.log(document.querySelector("#"+ from.name +"-List-View"))
     Store.state.scrollElements[from.name] = scrollTop;
   }
-  console.log(Store);
   next();
 })
 

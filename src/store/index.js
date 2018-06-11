@@ -9,6 +9,8 @@ const store = new Vuex.Store({
     scrollElements: {},
     scrollTop: 0,
     currentShowPanel: 0,
+    expand: false,
+    corpId: ''
   },
   getters: {
   }
