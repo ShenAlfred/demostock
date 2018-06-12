@@ -71,35 +71,39 @@
       </div>
       <!-- list-view -->
     </drawer>
-    <popup id="panelView" :height="screenHeight" v-model="showDataLayer" :showMask="false" :popup-style="{'z-index': '522'}">
-      <div>
-        <div class="group-item-label group-item-label-inner vux-1px-b" v-on:click="_hideDataLayer">
-          <div class="gil-name">{{singleMsg.name}}</div>
-          <div class="ac">
-            <!--<badge v-if="group.count != 0" :text="group.count"  @click.native="unReadEvent($event, group.corpId)"></badge>-->
-            <badge v-if="singleMsg.count != 0" :text="singleMsg.count"></badge>
+    <popup id="panelView" :height="screenHeight" v-model="showDataLayer" :showMask="false" :popup-style="{'z-index': '522', 'overflow': 'hidden'}">
+      <div class="flex_group">
+        <div class="group-item-label-inner">
+          <div class="group-item-label vux-1px-b" v-on:click="_hideDataLayer">
+            <div class="gil-name">{{singleMsg.name}}</div>
+            <div class="ac">
+              <!--<badge v-if="group.count != 0" :text="group.count"  @click.native="unReadEvent($event, group.corpId)"></badge>-->
+              <badge v-if="singleMsg.count != 0" :text="singleMsg.count"></badge>
+            </div>
           </div>
         </div>
         <div class="group-ml-panel">
-          <div class="msg-item vux-1px-b" v-bind:class="{importance: msg.type == 1 || msg.type == 2 || msg.type == 3 || msg.type == 4, unimportance: msg.type == 5 || msg.type == 6 || msg.type == 7}" v-for="(msg, index) in singleMsg.data.page.list" v-on:click="toDetail(msg.id)">
-            <div>
-              <div class="msg-text ellipsis">
-                [{{msg.originSource}}]
-                {{ msg.title }}
-              </div>
-              <div class="msg-date">
-                <span>{{ msg.date }}</span>
-                <span class="msg-type">
+          <div class="group-ml-panel-inner">
+            <div class="msg-item vux-1px-b" v-bind:class="{importance: msg.type == 1 || msg.type == 2 || msg.type == 3 || msg.type == 4, unimportance: msg.type == 5 || msg.type == 6 || msg.type == 7}" v-for="(msg, index) in singleMsg.data.page.list" v-on:click="toDetail(msg.id)">
+              <div>
+                <div class="msg-text ellipsis">
+                  [{{msg.originSource}}]
+                  {{ msg.title }}
+                </div>
+                <div class="msg-date">
+                  <span>{{ msg.date }}</span>
+                  <span class="msg-type">
                   {{ msg.dateType }}
                 </span>
+                </div>
               </div>
+              <div class="new-point" v-show="!msg.read"></div>
             </div>
-            <div class="new-point" v-show="!msg.read"></div>
-          </div>
-          <divider style="padding:40px 0;" v-show="!singleMsg.data.page.list.length">暂无数据</divider>
-          <div class="more" v-show="singleMsg.data.page.list.length">
-            <div v-on:click="more(currentShowPanel, singleMsg.corpId)" v-show="!singleMsg.data.page.lastPage">点击查看更多</div>
-            <div v-show="singleMsg.data.page.lastPage">没有更多数据</div>
+            <divider style="padding:40px 0;" v-show="!singleMsg.data.page.list.length">暂无数据</divider>
+            <div class="more" v-show="singleMsg.data.page.list.length">
+              <div v-on:click="more(currentShowPanel, singleMsg.corpId)" v-show="!singleMsg.data.page.lastPage">点击查看更多</div>
+              <div v-show="singleMsg.data.page.lastPage">没有更多数据</div>
+            </div>
           </div>
         </div>
       </div>

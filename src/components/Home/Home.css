@@ -154,12 +154,28 @@
   grid-template-columns: 80% 20%;
 }
 .group-item-label-inner {
-  position: fixed;
-  width: 100%;
-  z-index: 1;
+  height: 48px;
 }
 .group-ml-panel {
-  padding-top: 48px;
+  -webkit-box-flex: 1;
+  flex: 1;
+  -webkit-flex: 1;
+  height: 100%;
+}
+.flex_group {
+  display: -webkit-box;
+  display: flex;
+  display: -webkit-flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-flex-flow: column;
+  flex-flow: column;
+  height: 100%;
+}
+.group-ml-panel-inner {
+  height: 100%;
+  padding-bottom: 50px;
+  overflow-y: auto;
 }
 .gil-name {
   padding-left: 15px;
