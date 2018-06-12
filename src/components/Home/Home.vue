@@ -455,8 +455,7 @@
       showCalendarSingle: function() {
         this.drawerVisibility = false;
         this.isShowCalendarSingle = true;
-      },
-      scrollFixed: function() {}
+      }
     },
     mounted: function() {
       var self = this;
@@ -464,7 +463,6 @@
       this.getGroupList();
       this.getStocksList();
       this.$refs.HomeListView.addEventListener('scroll', function() {
-        self.scrollFixed();
         self.$store.state.scrollTop = this.scrollTop;
       });
       this.$nextTick(()=> {

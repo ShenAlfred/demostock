@@ -58,7 +58,7 @@
         <router-view></router-view>
       </div>
       <!-- list-view -->
-      <div class="list-view" id="Home-List-View" ref="HomeListView">
+      <div class="list-view" id="Home-List-View">
         <div class="group-item vux-1px-b" v-bind:data-index="index" v-bind:data-corpId="group.corpId" v-for="(group, index) in groupList">
           <div class="group-item-label vux-1px-b" v-on:click="_showDataLayer({'paras[corpId]': group.corpId}, index, group.corpId)">
             <div class="gil-name">{{ group.name }}</div>
@@ -71,34 +71,36 @@
       </div>
       <!-- list-view -->
     </drawer>
-    <popup height="90%" v-model="showDataLayer" :showMask="false" :popup-style="{'z-index': '522'}">
-      <div class="group-item-label group-item-label-inner vux-1px-b" v-on:click="_hideDataLayer">
-        <div class="gil-name">{{singleMsg.name}}</div>
-        <div class="ac">
-          <!--<badge v-if="group.count != 0" :text="group.count"  @click.native="unReadEvent($event, group.corpId)"></badge>-->
-          <badge v-if="singleMsg.count != 0" :text="singleMsg.count"></badge>
+    <popup id="panelView" :height="screenHeight" v-model="showDataLayer" :showMask="false" :popup-style="{'z-index': '522'}">
+      <div>
+        <div class="group-item-label group-item-label-inner vux-1px-b" v-on:click="_hideDataLayer">
+          <div class="gil-name">{{singleMsg.name}}</div>
+          <div class="ac">
+            <!--<badge v-if="group.count != 0" :text="group.count"  @click.native="unReadEvent($event, group.corpId)"></badge>-->
+            <badge v-if="singleMsg.count != 0" :text="singleMsg.count"></badge>
+          </div>
         </div>
-      </div>
-      <div class="group-ml-panel">
-        <div class="msg-item vux-1px-b" v-bind:class="{importance: msg.type == 1 || msg.type == 2 || msg.type == 3 || msg.type == 4, unimportance: msg.type == 5 || msg.type == 6 || msg.type == 7}" v-for="(msg, index) in singleMsg.data.page.list" v-on:click="toDetail(msg.id)">
-          <div>
-            <div class="msg-text ellipsis">
-              [{{msg.originSource}}]
-              {{ msg.title }}
-            </div>
-            <div class="msg-date">
-              <span>{{ msg.date }}</span>
-              <span class="msg-type">
+        <div class="group-ml-panel">
+          <div class="msg-item vux-1px-b" v-bind:class="{importance: msg.type == 1 || msg.type == 2 || msg.type == 3 || msg.type == 4, unimportance: msg.type == 5 || msg.type == 6 || msg.type == 7}" v-for="(msg, index) in singleMsg.data.page.list" v-on:click="toDetail(msg.id)">
+            <div>
+              <div class="msg-text ellipsis">
+                [{{msg.originSource}}]
+                {{ msg.title }}
+              </div>
+              <div class="msg-date">
+                <span>{{ msg.date }}</span>
+                <span class="msg-type">
                   {{ msg.dateType }}
                 </span>
+              </div>
             </div>
+            <div class="new-point" v-show="!msg.read"></div>
           </div>
-          <div class="new-point" v-show="!msg.read"></div>
-        </div>
-        <divider style="padding:40px 0;" v-show="!singleMsg.data.page.list.length">暂无数据</divider>
-        <div class="more" v-show="singleMsg.data.page.list.length">
-          <div v-on:click="more(currentShowPanel, singleMsg.corpId)" v-show="!singleMsg.data.page.lastPage">点击查看更多</div>
-          <div v-show="singleMsg.data.page.lastPage">没有更多数据</div>
+          <divider style="padding:40px 0;" v-show="!singleMsg.data.page.list.length">暂无数据</divider>
+          <div class="more" v-show="singleMsg.data.page.list.length">
+            <div v-on:click="more(currentShowPanel, singleMsg.corpId)" v-show="!singleMsg.data.page.lastPage">点击查看更多</div>
+            <div v-show="singleMsg.data.page.lastPage">没有更多数据</div>
+          </div>
         </div>
       </div>
     </popup>
@@ -126,6 +128,7 @@
   export default{
     data(){
       return {
+        screenHeight: "100%",
         currentShowPanel: 0,
         date: [1,2,3,4,5,6,7,8,9,10,11,12],
         calendar1:{
@@ -478,27 +481,32 @@
         this.drawerVisibility = false;
         this.isShowCalendarSingle = true;
       },
+      dysto: function(corpId) {
+        if(!corpId) return;
+        var obj= {}, stockCode = document.querySelectorAll('.stock-code');
+        stockCode.forEach(function(el, index) {
+          if(corpId == el.dataset.corpid) {
+            obj = {
+              currentBlockIndex: index,
+              _index: parseInt(el.dataset.index)
+            }
+            return obj;
+          }
+        });
+        this.stocks.forEach(function(every) {
+          every.isActive = false;
+        });
+        this.stocks[obj.currentBlockIndex].isActive = true;
+      },
       _showDataLayer: function(params, index, corpId) {
+        var self = this;
         this.$store.state.currentShowPanel = this.currentShowPanel = index;
         this.getMessageListNew(params, index);
         this.showDataLayer = true;
         this.$store.state.expand = true;
         this.$store.state.corpId = this.corpId = corpId;
         this.$nextTick(()=> {
-          var obj= {}, stockCode = document.querySelectorAll('.stock-code');
-          stockCode.forEach(function(el, index) {
-            if(corpId == el.dataset.corpid) {
-              obj = {
-                currentBlockIndex: index,
-                _index: parseInt(el.dataset.index)
-              }
-              return obj;
-            }
-          });
-          this.stocks.forEach(function(every) {
-            every.isActive = false;
-          });
-          this.stocks[obj.currentBlockIndex].isActive = true;
+          this.dysto(corpId);
         });
       },
       _hideDataLayer: function() {
@@ -515,6 +523,10 @@
       if(this.showDataLayer) {
         this.singleMsg =  this.$store.state.GroupList[this.$store.state.currentShowPanel]
       }
+      this.$nextTick(()=>{
+        var clientHeight = document.documentElement.clientHeight;
+        this.screenHeight = (clientHeight - 70)+"px";
+      });
     },
     directives: {
       currentStock: {
