@@ -297,16 +297,7 @@
       getMessageListNew: function(params,index) {
         var self = this;
         if(this.$store.state.GroupList[index].data.page.list.length) {
-          this.$ajax.get(config.baseUrl + '/crawler/api/messages', {
-            params: params
-          }).then(function(req) {
-            if(req.data.code=="0") {
-              self.$store.state.GroupList[index].count = req.data.data.count;
-              self.groupList[index].data.page.list = self.$store.state.GroupList[index].data.page.list;
-              self.groupList[index].count = self.$store.state.GroupList[index].count;
-              self.singleMsg = self.groupList[index];
-            }
-          });
+          this.singleMsg = this.$store.state.GroupList[index];
         }else {
           this.$ajax.get(config.baseUrl + '/crawler/api/messages', {
             params: params
