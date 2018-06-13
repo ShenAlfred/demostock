@@ -112,18 +112,25 @@
       },
       add_stock: function() {
         var self = this;
-        this.$ajax.post(config.baseUrl + '/crawler/api/add', {
-          corpId: this.corpId,
-          remark: this.stock_remark
-        }).then(function(res) {
-          self.stock_code = null;
-          self.stock_remark = '';
-          self.showAddPopup = false;
-          self.search_stocks = [];
-          self.toast.text = res.data.msg;
+        if(!this.corpId) {
+          self.toast.text = "请输入有效的股票代码";
           self.toast.isShowToast = true;
-          self.getStocks();
-        });
+          return;
+        }
+        else {
+          this.$ajax.post(config.baseUrl + '/crawler/api/add', {
+            corpId: this.corpId,
+            remark: this.stock_remark
+          }).then(function(res) {
+            self.stock_code = null;
+            self.stock_remark = '';
+            self.showAddPopup = false;
+            self.search_stocks = [];
+            self.toast.text = res.data.msg;
+            self.toast.isShowToast = true;
+            self.getStocks();
+          });
+        }
       },
       menu_cancel: function() {
         this.isShowDelete = false;
