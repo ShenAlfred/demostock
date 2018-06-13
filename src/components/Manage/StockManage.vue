@@ -58,7 +58,8 @@
         showAddPopup: false,
         showMenus: false,
         isShowDelete: false,
-        menus: ['添加', '删除']
+        menus: ['添加', '删除'],
+        showStockList: false
       }
     },
     mounted: function() {
@@ -94,6 +95,7 @@
       },
       check_stock: function(arg) {
         var self = this;
+        this.corpId = "";
         if(arg == null) {return;}
         this.$ajax.post(config.baseUrl + '/crawler/api/codematch', {
           code: arg
