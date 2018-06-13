@@ -74,7 +74,7 @@
     <popup id="panelView" :height="screenHeight" v-model="showDataLayer" :showMask="false" :popup-style="{'z-index': '522', 'overflow': 'hidden'}">
       <div class="flex_group">
         <div class="group-item-label-inner">
-          <div class="group-item-label vux-1px-b" v-on:click="_hideDataLayer">
+          <div class="group-item-label vux-1px-b" v-on:click="_hideDataLayer(currentShowPanel)">
             <div class="gil-name">{{singleMsg.name}}</div>
             <div class="ac">
               <!--<badge v-if="group.count != 0" :text="group.count"  @click.native="unReadEvent($event, group.corpId)"></badge>-->
@@ -134,6 +134,7 @@
       return {
         screenHeight: "100%",
         currentShowPanel: 0,
+        previousShowPanel: 0,
         date: [1,2,3,4,5,6,7,8,9,10,11,12],
         calendar1:{
           value:[new Date().getFullYear(), new Date().getMonth()+1, new Date().getDate()], //默认日期
@@ -504,8 +505,15 @@
           this.dysto(corpId);
         });
       },
-      _hideDataLayer: function() {
+      _hideDataLayer: function(index) {
         this.showDataLayer = false;
+        this.singleMsg = {
+          data: {
+            page: {
+              list: []
+            }
+          }
+        };
       }
     },
     mounted: function() {
