@@ -6,6 +6,7 @@
     <div class="article-panel" v-if="!isShowDefault">
       <h3 class="article-title" v-html="title"></h3>
       <div class="article-time">{{date}}</div>
+      <div class="article-time">获取时间: {{ getDate }}</div>
       <div class="article-content sina_content" v-html="content">
       </div>
       <div class="attachment-text" v-if="attachment">
@@ -36,6 +37,7 @@
       return {
         title: "",
         date: '',
+        getDate: '',
         content: '',
         attachment: '',
         sourceLink: '',
@@ -70,7 +72,8 @@
       }).then(function(req) {
         if(req.data.code == "0") {
           self.title = req.data.data.title;
-          self.date = dateFormat(new Date(req.data.data.dateTime), 'YYYY-MM-DD');
+          self.date = req.data.data.dateTimeStr;
+          self.getDate = req.data.data.createTimeStr;
           self.content = req.data.data.content;
           req.data.data.attachment ? self.attachment = config.baseUrl + req.data.data.attachment : self.attachment = "";
           req.data.data.sourceLink ? self.sourceLink = req.data.data.sourceLink : self.sourceLink = '';
