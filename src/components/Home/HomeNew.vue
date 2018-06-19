@@ -172,6 +172,7 @@
         getDataError: false,        //获取数据失败提示
         showDataLayer: false,
         singleMsg: {
+          count: 0,
           data: {
             page: {
               list: []
@@ -564,6 +565,7 @@
       _hideDataLayer: function (index) {
         this.showDataLayer = false;
         this.singleMsg = {
+          count: 0,
           data: {
             page: {
               list: []
