@@ -7,8 +7,9 @@
       <h3 class="article-title" v-html="title"></h3>
       <div class="article-time">{{date}}</div>
       <div class="article-time">获取时间: {{ getDate }}</div>
-      <div class="rich_media_content">
-        <div class="article-content sina_content" v-html="content">
+      <div class="article-content sina_content">
+        <div class="rich_media_content">
+          <div v-html="content"></div>
         </div>
       </div>
       <div class="attachment-text" v-if="attachment">
