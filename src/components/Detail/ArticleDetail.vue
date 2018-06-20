@@ -8,9 +8,7 @@
       <div class="article-time">{{date}}</div>
       <div class="article-time">获取时间: {{ getDate }}</div>
       <div class="article-content sina_content">
-        <div class="rich_media_content">
           <div v-html="content"></div>
-        </div>
       </div>
       <div class="attachment-text" v-if="attachment">
         <a v-bind:href="attachment">
@@ -59,10 +57,14 @@
         if(group.data.page.list.length) {
           group.data.page.list.forEach(function(item, index) {
             if(item.id == articleId) {
-              item.read = 1;
-              if(group.count==0) return
-              else {
-                group.count = group.count - 1;
+              if(item.read == 1) {
+                return
+              }else {
+                item.read = 1;
+                if(group.count==0) return
+                else {
+                  group.count = group.count - 1;
+                }
               }
             }
           });
