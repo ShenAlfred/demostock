@@ -259,7 +259,7 @@
             msg.originSource = "财联社";
             break;
           case 16:
-            msg.originSource = "证券市场红周刊";
+            msg.originSource = "证券市场周刊";
             break;
           case 17:
             msg.originSource = "环球老虎财经";
